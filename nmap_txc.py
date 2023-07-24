@@ -20,34 +20,47 @@ def scanner_nmap(ip_addr,port,types):
         print('\nNmap Version: ', scanner.nmap_version())
         scanner.scan(ip_addr,port,'-v -sS')
         print(scanner.scaninfo())
-        print('IP status: ', scanner[ip_addr].state())
-        print(scanner[ip_addr].all_protocols())
-        print('Open ports: ',scanner[ip_addr]['tcp'].keys())
-        results = scanner.csv().replace('\r','')
-        
-        results_format(results)
+        status = scanner[ip_addr].state()
+        if status == 'up':
+            print('IP status: ', status)
+            print(scanner[ip_addr].all_protocols())
+            print('Open ports: ',scanner[ip_addr]['tcp'].keys())
+            results = scanner.csv().replace('\r','')
+            
+            results_format(results)
+        else:
+            print('IP status: ', status)
 
     elif types == '2':
         print('\nNmap Version: ',scanner.nmap_version())
         scanner.scan(ip_addr,port,'-v -sU')
         print(scanner.scaninfo())
-        print('IP status: ',scanner[ip_addr].state())
-        print(scanner[ip_addr].all_protocols())
-        print('Open ports: ',scanner[ip_addr]['udp'].keys())
-        results = scanner.csv().replace('\r','')
-        
-        results_format(results)
+        status = scanner[ip_addr].state()
+        if status =='up':
+            print('IP status: ', status)
+            print(scanner[ip_addr].all_protocols())
+            print('Open ports: ',scanner[ip_addr]['udp'].keys())
+            results = scanner.csv().replace('\r','')
+            
+            results_format(results)
+        else:
+            print('IP status: ', status)
 
     elif types == '3':
         print('\nNmap Version: ', scanner.nmap_version())
         scanner.scan(ip_addr,port,'-v -sS -sC -sV -A -O')
         print(scanner.scaninfo())
-        ipsta = print('IP status: ', scanner[ip_addr].state())
-        print(scanner[ip_addr].all_protocols())
-        print('Open ports: ',scanner[ip_addr]['tcp'].keys())
-        results = scanner.csv().replace('\r','')
-        
-        results_format(results)
+        status == scanner[ip_addr].state()
+        if status == 'up':
+            print('IP status: ', status)
+            print(scanner[ip_addr].all_protocols())
+            print('Open ports: ',scanner[ip_addr]['tcp'].keys())
+            results = scanner.csv().replace('\r','')
+            
+            results_format(results)
+        else:
+            print('IP status: ', status)
+            
     elif types >= '4':
         print('Your type not available!! Please, try again!!')
 
