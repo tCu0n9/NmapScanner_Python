@@ -1,6 +1,46 @@
 import nmap
 import csv
 
+def target_port():
+    ports = input('Press ports: ')
+    if ',' in ports:
+        port_list = ports.split(',')
+        for port in port_list:
+            if not port.isdigit() or int(port) <= 0 or int(port) > 65535:
+                print('==> Invalid port. Using default port range: 1-1024')
+                ports = '1-1024'
+                return ports
+        print('==> Target Port: ',ports)
+        type(ports)
+        return ports
+    elif '-' in ports:
+        port_list = ports.split('-')
+        for port in port_list:
+            if not port.isdigit() or int(port) <= 0 or int(port) > 65535:
+                print('==> Invalid port. Using default port range: 1-1024')
+                ports = '1-1024'
+                return ports
+        print('==> Target Port: ',ports)
+        type(ports)
+        return ports
+    else:
+        if not ports.isdigit() or int(ports) <= 0 or int(ports) > 65535:
+            print('==> Invalid port. Using default port range: 1-1024')
+            ports = '1-1024'
+            return ports
+        print('==> Target Port: ',ports)
+        type(ports)
+        return ports
+
+def replace_IP(ip_addr,i):
+    octet = ip_addr.split('.')
+    if len(octet) == 4:
+        octet[-1] = str(i)
+        new_ip = ".".join(octet)
+        return new_ip
+    else:
+        return None
+
 def results_format(results):
     lines = results.strip().split('\n')
     
@@ -13,7 +53,7 @@ def results_format(results):
         for i in range(len(header)):
             print(f"{header[i]}: {row[i]}")
             
-def scanner_nmap(ip_addr,port,types):
+def scanner_an_ip(ip_addr,port,types):
     scanner = nmap.PortScanner()
 
     if types == '1':
@@ -63,28 +103,49 @@ def scanner_nmap(ip_addr,port,types):
             
     elif types >= '4':
         print('Your type not available!! Please, try again!!')
-
-
+        
 if __name__ == "__main__":
     print('\t\tWelcome to Nmap')
     print('<---------------------------------------------->')
 
-    ip_addr = input('Press IP: ')
-    print('==> IP target: ', ip_addr)
-    type(ip_addr)
-
-    port = input('Press ports: ')
-    if not port.isdigit() or int(port) <= 0 or int(port) > 65535:
-        print('==> Invalid port. Using default port range: 1-1024')
-        port = '1-1024'
-    else:
-        print('==> Ports target: ',port)
-    type(port)
-    
-    types = input('''\nSelect type scan:
+    type_ip = input('''Select type IP to scan:
+                    1.An IP address
+                    2.An Ip address range
+Select: ''')
+    if type_ip == '1':
+        ip_addr = input('Press IP: ')
+        print('==> Target IP: ', ip_addr)
+        type(ip_addr)
+        ports = target_port()
+        
+        types = input('''\nSelect type scan:
                     1. SYN ACK 
                     2. UDP 
                     3. Comprehensive
 Select: ''')
     
-    scanner_nmap(ip_addr,port,types)
+        scanner_an_ip(ip_addr,ports,types)
+        
+    elif type_ip == '2':
+        ip_range = input('Press IP range: ')
+        print('==> Target IP range: ', ip_range)
+        type(ip_range)
+        ports = target_port()
+        
+        ip_addr = ip_range.split('/')[0]
+        subnet = ip_range.split('/')[-1]
+        
+        types = input('''\nSelect type scan:
+                    1. SYN ACK 
+                    2. UDP 
+                    3. Comprehensive
+Select: ''')
+        
+        if subnet == '24':
+            for i in range (1,255):
+                new_ip_addr = replace_IP(ip_addr,i)
+                print("\n<=======================>")
+                print("IP: ", new_ip_addr)
+                scanner_an_ip(new_ip_addr,ports,types)
+            print("<========== DONE ==========>")
+            
