@@ -97,12 +97,17 @@ def scanner_an_ip(ip_addr,port,types):
     elif types == '3':
         print('\nNmap Version: ', scanner.nmap_version())
         scanner.scan(ip_addr,port,'-v -sS -sC -sV -A -O')
+        
         print(scanner.scaninfo())
-        status == scanner[ip_addr].state()
+        status = scanner[ip_addr].state()
         if status == 'up':
             print('IP status: ', status)
             print(scanner[ip_addr].all_protocols())
             results = scanner.csv().replace('\r','')
+            os_match = scanner[ip_addr]['osmatch']
+            for match in os_match:
+                name_os = match.get('name','')
+            print(f'OS: {name_os}')
             
             results_format(results)
         else:
