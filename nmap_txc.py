@@ -32,10 +32,20 @@ def target_port():
         type(ports)
         return ports
 
-def replace_IP(ip_addr,i):
+def replace_IP1(ip_addr,i):
     octet = ip_addr.split('.')
     if len(octet) == 4:
         octet[-1] = str(i)
+        new_ip = ".".join(octet)
+        return new_ip
+    else:
+        return None
+    
+def replace_IP2(ip_addr,x,y):
+    octet = ip_addr.split('.')
+    if len(octet) == 4:
+        octet[-1] = str(x)
+        octet[-2] = str(y)
         new_ip = ".".join(octet)
         return new_ip
     else:
@@ -64,7 +74,6 @@ def scanner_an_ip(ip_addr,port,types):
         if status == 'up':
             print('IP status: ', status)
             print(scanner[ip_addr].all_protocols())
-            print('Open ports: ',scanner[ip_addr]['tcp'].keys())
             results = scanner.csv().replace('\r','')
             
             results_format(results)
@@ -79,7 +88,6 @@ def scanner_an_ip(ip_addr,port,types):
         if status =='up':
             print('IP status: ', status)
             print(scanner[ip_addr].all_protocols())
-            print('Open ports: ',scanner[ip_addr]['udp'].keys())
             results = scanner.csv().replace('\r','')
             
             results_format(results)
@@ -94,7 +102,6 @@ def scanner_an_ip(ip_addr,port,types):
         if status == 'up':
             print('IP status: ', status)
             print(scanner[ip_addr].all_protocols())
-            print('Open ports: ',scanner[ip_addr]['tcp'].keys())
             results = scanner.csv().replace('\r','')
             
             results_format(results)
@@ -104,13 +111,31 @@ def scanner_an_ip(ip_addr,port,types):
     elif types >= '4':
         print('Your type not available!! Please, try again!!')
         
+def scanner_ip_range(ip_addr,subnet,ports,types):
+    if subnet == '24':
+        for i in range (1,255):
+            new_ip_addr = replace_IP1(ip_addr,i)
+            print("\n<============================================>")
+            print("IP: ", new_ip_addr)
+            scanner_an_ip(new_ip_addr,ports,types)
+        print("<========== DONE ==========>")
+            
+    if subnet == '16':
+        for i in range (0,256):
+            for k in range(1,255):
+                new_ip_addr = replace_IP2(ip_addr,k,i)
+                print("\n<========================================>")
+                print("IP: ",new_ip_addr)
+                scanner_an_ip(new_ip_addr,ports,types)
+        print("<==================== DONE ====================>")
+                        
 if __name__ == "__main__":
     print('\t\tWelcome to Nmap')
     print('<---------------------------------------------->')
 
     type_ip = input('''Select type IP to scan:
-                    1.An IP address
-                    2.An Ip address range
+                1.An IP address
+                2.An Ip address range
 Select: ''')
     if type_ip == '1':
         ip_addr = input('Press IP: ')
@@ -123,7 +148,6 @@ Select: ''')
                     2. UDP 
                     3. Comprehensive
 Select: ''')
-    
         scanner_an_ip(ip_addr,ports,types)
         
     elif type_ip == '2':
@@ -140,12 +164,4 @@ Select: ''')
                     2. UDP 
                     3. Comprehensive
 Select: ''')
-        
-        if subnet == '24':
-            for i in range (1,255):
-                new_ip_addr = replace_IP(ip_addr,i)
-                print("\n<=======================>")
-                print("IP: ", new_ip_addr)
-                scanner_an_ip(new_ip_addr,ports,types)
-            print("<========== DONE ==========>")
-            
+        scanner_ip_range(ip_addr,subnet,ports,types)
