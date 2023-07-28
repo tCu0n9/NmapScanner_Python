@@ -123,7 +123,7 @@ def scanner_ip_range(ip_addr,subnet,ports,types):
             print("\n<============================================>")
             print("IP: ", new_ip_addr)
             scanner_an_ip(new_ip_addr,ports,types)
-        print("<========== DONE ==========>")
+        print("<==================== DONE ====================>")
             
     if subnet == '16':
         for i in range (0,256):
