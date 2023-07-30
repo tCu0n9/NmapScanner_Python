@@ -65,9 +65,10 @@ def results_format(results):
             
 def scanner_an_ip(ip_addr,port,types):
     scanner = nmap.PortScanner()
+    vers = scanner.nmap_version()
 
     if types == '1':
-        print('\nNmap Version: ', scanner.nmap_version())
+        print('\nNmap Version: %s.%d' % (vers[0],vers[1]))
         scanner.scan(ip_addr,port,'-v -sS')
         print(scanner.scaninfo())
         status = scanner[ip_addr].state()
@@ -81,7 +82,7 @@ def scanner_an_ip(ip_addr,port,types):
             print('IP status: ', status)
 
     elif types == '2':
-        print('\nNmap Version: ',scanner.nmap_version())
+        print('\nNmap Version: %s.%d' % (vers[0],vers[1]))
         scanner.scan(ip_addr,port,'-v -sU')
         print(scanner.scaninfo())
         status = scanner[ip_addr].state()
@@ -95,9 +96,8 @@ def scanner_an_ip(ip_addr,port,types):
             print('IP status: ', status)
 
     elif types == '3':
-        print('\nNmap Version: ', scanner.nmap_version())
-        scanner.scan(ip_addr,port,'-v -sS -sC -sV -A -O')
-        
+        print('\nNmap Version: %s.%d' % (vers[0],vers[1]))
+        scanner.scan(ip_addr,port,'-v -sS -sC -sV -A -O')  
         print(scanner.scaninfo())
         status = scanner[ip_addr].state()
         if status == 'up':
